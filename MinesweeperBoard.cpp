@@ -108,42 +108,6 @@ void MinesweeperBoard::debug_display() const
     }
 }
 
-char MinesweeperBoard::debug_checkRevealed(bool check) const
-{
-    if (!check)
-    {
-        return '.';
-    }
-    else
-    {
-        return 'o';
-    }
-}
-
-char MinesweeperBoard::debug_checkFlag(bool check) const
-{
-    if (!check)
-    {
-        return '.';
-    }
-    else
-    {
-        return 'f';
-    }
-}
-
-char MinesweeperBoard::debug_checkMine(bool check) const
-{
-    if (!check)
-    {
-        return '.';
-    }
-    else
-    {
-        return 'M';
-    }
-}
-
 int MinesweeperBoard::getBoardWidth() const
 {
     return width_;

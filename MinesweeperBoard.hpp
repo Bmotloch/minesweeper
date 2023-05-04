@@ -39,9 +39,6 @@ private:
     Array2D<Field> board_{maxsize, maxsize};
     void fillBoard(Array2D<Field> &board, int mineCount);
     void debug_fillBoard(Array2D<Field> &board);
-    char debug_checkRevealed(bool) const;
-    char debug_checkFlag(bool) const;
-    char debug_checkMine(bool) const;
     void relocateMine(int row, int col);
     int getBoardWidth() const;
     int getBoardHeight() const;
