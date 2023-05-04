@@ -89,24 +89,20 @@ void MinesweeperBoard::debug_fillBoard(Array2D<Field> &board)
 
 void MinesweeperBoard::debug_display() const
 {
-    std::cout << "       ";
+    std::cout << "     ";
     for (int i = 0; i < getBoardWidth(); i++)
     {
-        std::cout << "   " << i << "   ";
+        std::cout << "  " << i << "  ";
     }
     std::cout << std::endl;
     for (int i = 0; i < getBoardHeight(); i++)
     {
-        std::cout << "   " << i << "   ";
+        std::cout << "  " << i << "  ";
         for (int j = 0; j < getBoardWidth(); j++)
         {
-            std::cout << "["
-                      << debug_checkMine(board_[i][j].hasMine)
-                      << " "
-                      << debug_checkRevealed(board_[i][j].isRevealed)
-                      << " "
-                      << debug_checkFlag(board_[i][j].hasFlag)
-                      << "]";
+            std::cout << "[ "
+                      << getFieldInfo(i, j)
+                      << " ]";
         }
         std::cout << std::endl;
     }
@@ -300,9 +296,10 @@ void MinesweeperBoard::revealField(int row, int col)
         if (board_[row][col].hasMine == false) // correct deduction
         {
             board_[row][col].isRevealed = true;
-            if(checkWin()){// check if already won;
-               setGameState(GameState::FINISHED_WIN);  
-            } 
+            if (checkWin())
+            { // check if already won;
+                setGameState(GameState::FINISHED_WIN);
+            }
         }
         else
         {
@@ -326,10 +323,21 @@ GameState MinesweeperBoard::message() const
     switch (state)
     {
     case GameState::FINISHED_LOSS:
-        std::cout << "Better luck next ti...oh, right :/" << std::endl;
+        std::cout << "     _____\n"
+                  << "    /     \\\n"
+                  << "   | () () |\n"
+                  << "   |   ^   |\n"
+                  << "   |^^^^^^^|\n"
+                  << "   |^^^^^^^|\n"
+                  << "    \\_____/\n"
+                  << "\n"
+                  << " B   O   O   M\n"
+                  << std::endl;
         break;
     case GameState::FINISHED_WIN:
-        std::cout << "Congrats comrade!" << std::endl;
+        std::cout << "Congrats comrade!\n"
+                  << "Promoted"
+                  << std::endl;
         break;
     case GameState::RUNNING:
         break;
@@ -351,5 +359,63 @@ bool MinesweeperBoard::checkWin() // if the player won the game (all unrevealed 
             }
         }
     }
-    return(unrevealed==safe_to_uncover);
+    return (unrevealed == safe_to_uncover);
+}
+
+int MinesweeperBoard::countMines(int row, int col) const
+{
+    if (checkInputRange(row, col) && isRevealed(row, col))
+    {
+        int count{0};
+        for (int i = row - 1; i <= row + 1; i++)
+        {
+            for (int j = col - 1; j <= col + 1; j++)
+            {
+                if (i >= 0 && i < getBoardHeight() && j >= 0 && j < getBoardWidth() && board_[i][j].hasMine)
+                {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+    std::cout << -1 << std::endl;
+    return -1;
+}
+
+char MinesweeperBoard::getFieldInfo(int row, int col) const
+{
+    if (!checkInputRange(row, col)) // if row or col is outside board - return '#' character
+    {
+        return '#';
+    }
+    if (!isRevealed(row, col))
+    {
+        if (hasFlag(row, col)) // if the field is not revealed and has a flag - return 'F' character
+        {
+            return 'F';
+        }
+        else
+        {
+            return '_'; // if the field is not revealed and does not have a flag  - return '_' (underscore) character
+        }
+    }
+    else
+    {
+        if (board_[row][col].hasMine) // if the field is revealed and has mine - return 'x' character
+        {
+            return 'x';
+        }
+        else
+        {
+            if (countMines(row, col) == 0) // if the field is revealed and has 0 mines around - return ' ' (space) character
+            {
+                return ' ';
+            }
+            else
+            {
+                return 48 + countMines(row, col); // if the field is revealed and has some mines around  - return '1' ... '8' (number of mines as a digit)
+            }                                     // +48 - numbers in ASCII!
+        }
+    }
 }

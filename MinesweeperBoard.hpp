@@ -55,8 +55,8 @@ private:
     GameState state_{GameState::RUNNING};
     void setGameState(GameState state);
     bool checkWin();
-   // char getFieldInfo(int row, int col) const;
-   // int countMines(int row, int col) const;  
+    char getFieldInfo(int row, int col) const;
+    int countMines(int row, int col) const;
 
 public:
     MinesweeperBoard(int rows, int columns, GameMode mode);
