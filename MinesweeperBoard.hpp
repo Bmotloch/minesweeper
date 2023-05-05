@@ -40,8 +40,6 @@ private:
     void fillBoard(Array2D<Field> &board, int mineCount);
     void debug_fillBoard(Array2D<Field> &board);
     void relocateMine(int row, int col);
-    int getBoardWidth() const;
-    int getBoardHeight() const;
     int getMineCount() const;
     bool checkInputRange(int row, int col) const;
     bool hasFlag(int row, int col) const;
@@ -52,7 +50,6 @@ private:
     GameState state_{GameState::RUNNING};
     void setGameState(GameState state);
     bool checkWin();
-    char getFieldInfo(int row, int col) const;
     int countMines(int row, int col) const;
 
 public:
@@ -60,9 +57,11 @@ public:
     ~MinesweeperBoard();
     GameState getGameState() const;
     GameState message() const;
-    void debug_display() const;
     void toggleFlag(int row, int col);
     void revealField(int row, int col);
+    char getFieldInfo(int row, int col) const;
+    int getBoardWidth() const;
+    int getBoardHeight() const;
 };
 
 #endif

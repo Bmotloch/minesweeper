@@ -3,17 +3,16 @@
 #define MSBBOARDTEXTVIEW__
 #include <string>
 #include <iostream>
-#include <cmath>
-#include <cstdlib>
-#include <ctime>
-#include <algorithm>
-#include "Array2D.h"
+#include "MinesweeperBoard.hpp"
+class MSBoardTextView
+{
+private:
+    const MinesweeperBoard &textboard;
 
-class MSBoardTextView{
-    private:
-    public:
-    MinesweeperBoard(MinesweeperBoard);
-    ~MinesweeperBoard();
+public:
+    MSBoardTextView(const MinesweeperBoard &board);
+    ~MSBoardTextView();
+    void display() const;
 };
 
 #endif

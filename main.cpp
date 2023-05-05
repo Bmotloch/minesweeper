@@ -1,5 +1,5 @@
 #include "MinesweeperBoard.hpp"
-// #include "MSBoardTextView.hpp"
+#include "MSBoardTextView.hpp"
 
 // kompilacja g++ main.cpp MinesweeperBoard.cpp -o main
 int main(int argc, char *argv[])
@@ -14,11 +14,11 @@ int main(int argc, char *argv[])
     int width{std::stoi(argv[2])};
     GameMode mode{getGameMode(argv[3])};
     MinesweeperBoard board(height, width, mode);
-    // MSBoardTextView view ( board );
+    MSBoardTextView view(board);
     while (board.getGameState() == GameState::RUNNING)
     {
         std::string choice{""}, row{""}, col{""};
-        board.debug_display();
+        view.display();
         std::cin >> choice >> row >> col;
         system("clear");
         if (choice == "f")

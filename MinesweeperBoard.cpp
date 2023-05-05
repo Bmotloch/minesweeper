@@ -87,27 +87,6 @@ void MinesweeperBoard::debug_fillBoard(Array2D<Field> &board)
     }
 }
 
-void MinesweeperBoard::debug_display() const
-{
-    std::cout << "     ";
-    for (int i = 0; i < getBoardWidth(); i++)
-    {
-        std::cout << "  " << i << "  ";
-    }
-    std::cout << std::endl;
-    for (int i = 0; i < getBoardHeight(); i++)
-    {
-        std::cout << "  " << i << "  ";
-        for (int j = 0; j < getBoardWidth(); j++)
-        {
-            std::cout << "[ "
-                      << getFieldInfo(i, j)
-                      << " ]";
-        }
-        std::cout << std::endl;
-    }
-}
-
 int MinesweeperBoard::getBoardWidth() const
 {
     return width_;
