@@ -2,14 +2,13 @@
 
 MSBoardTextView::MSBoardTextView(const MinesweeperBoard &board) : textboard{board}
 {
-
 }
 
-MSBoardTextView::~MSBoardTextView(){
-    
+MSBoardTextView::~MSBoardTextView()
+{
 }
 
-void MSBoardTextView::display()const
+void MSBoardTextView::display() const
 {
     std::cout << "     ";
     for (int i = 0; i < textboard.getBoardWidth(); i++)

@@ -288,7 +288,7 @@ GameState MinesweeperBoard::message() const
     return state;
 }
 
-bool MinesweeperBoard::checkWin() // if the player won the game (all unrevealed fields have mines)
+bool MinesweeperBoard::checkWin() const // if the player won the game (all unrevealed fields have mines)
 {
     int unrevealed{0};
     int safe_to_uncover{getBoardHeight() * getBoardWidth() - getMineCount()};

@@ -3,6 +3,7 @@
 #define MINESBOARD_H__
 #include <string>
 #include <iostream>
+#include <limits>
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
@@ -49,7 +50,7 @@ private:
     GameMode mode_;
     GameState state_{GameState::RUNNING};
     void setGameState(GameState state);
-    bool checkWin();
+    bool checkWin() const;
     int countMines(int row, int col) const;
 
 public:
