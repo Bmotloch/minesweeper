@@ -128,7 +128,11 @@ bool MinesweeperBoard::isBoardFresh() const
     return true;
 }
 
-void MinesweeperBoard::relocateMine(int row, int col)
+bool MinesweeperBoard::isNotAdjacent(int row, int col, int newRow, int newCol) // now player cannot play a 3x3 board
+{
+    return abs(row - newRow) > 1 || abs(col - newCol) > 1;
+}
+void MinesweeperBoard::relocateMine(int row, int col) // small change, moved mine cannot be adjacent the old position
 {
     int i = 0;
     while (i != 1)
@@ -137,6 +141,11 @@ void MinesweeperBoard::relocateMine(int row, int col)
         int newCol = rand() % getBoardWidth();
         i++;
         if (board_[newRow][newCol].hasMine)
+        {
+            i--;
+            continue;
+        }
+        else if (!isNotAdjacent(row, col, newRow, newCol)) // new condition
         {
             i--;
             continue;
@@ -232,57 +241,28 @@ void MinesweeperBoard::revealField(int row, int col)
 {
     if (!checkInputRange(row, col) || isRevealed(row, col) || hasFlag(row, col) || getGameState() != GameState::RUNNING)
     {
-        // doing nothing
+        return;
     }
-    else
+    if (board_[row][col].hasMine) // moved the losing condition up, easier to read the boolean logic
     {
-        if (board_[row][col].hasMine == false) // correct deduction
+        if (isBoardFresh() && mode_ != GameMode::DEBUG) // first action only in normal modes
+        {
+            relocateMine(row, col); // move the mine
+            board_[row][col].isRevealed = true;
+            revealEmptyFields(row, col); // helper function for handling the nested loop
+        }
+        else // bad luck
         {
             board_[row][col].isRevealed = true;
-            for (int i = row - 1; i <= row + 1; i++)
-            {
-                for (int j = col - 1; j <= col + 1; j++)
-                {
-                    if (i >= 0 && i < getBoardHeight() && j >= 0 && j < getBoardWidth() && !board_[i][j].hasMine)
-                    {
-                        if (countMines(i, j) == 0)
-                        {
-                            revealField(i, j); // recursively reveal a cluster of empty fields around
-                        }
-                    }
-                }
-            }
-
-            if (checkWin())
-            { // check if already won;
-                setGameState(GameState::FINISHED_WIN);
-            }
+            setGameState(GameState::FINISHED_LOSS);
         }
-        else
+    }
+    else // correct deduction
+    {
+        revealEmptyFields(row, col); // helper function for handling the nested loop
+        if (checkWin())              // check if already won;
         {
-            if (isBoardFresh() && mode_ != GameMode::DEBUG) // first action only in normal modes
-            {
-                relocateMine(row, col); // move the mine
-                board_[row][col].isRevealed = true;
-                for (int i = row - 1; i <= row + 1; i++)
-                {
-                    for (int j = col - 1; j <= col + 1; j++)
-                    {
-                        if (i >= 0 && i < getBoardHeight() && j >= 0 && j < getBoardWidth() && !board_[i][j].hasMine)
-                        {
-                            if (countMines(i, j) == 0)
-                            {
-                                board_[i][j].isRevealed = true; // recursively reveal a cluster of empty fields around
-                            }
-                        }
-                    }
-                }
-            }
-            else // bad luck
-            {
-                board_[row][col].isRevealed = true;
-                setGameState(GameState::FINISHED_LOSS);
-            }
+            setGameState(GameState::FINISHED_WIN);
         }
     }
 }
@@ -386,6 +366,30 @@ char MinesweeperBoard::getFieldInfo(int row, int col) const
             {
                 return 48 + countMines(row, col); // if the field is revealed and has some mines around  - return '1' ... '8' (number of mines as a digit)
             }                                     // +48 - numbers in ASCII!
+        }
+    }
+}
+
+void MinesweeperBoard::revealEmptyFields(int row, int col)
+{
+    if (!checkInputRange(row, col) || isRevealed(row, col))
+    {
+        return; // do nothing
+    }
+
+    board_[row][col].isRevealed = true;
+
+    if (countMines(row, col) == 0)
+    {
+        for (int i = row - 1; i <= row + 1; i++)
+        {
+            for (int j = col - 1; j <= col + 1; j++)
+            {
+                if (i >= 0 && i < getBoardHeight() && j >= 0 && j < getBoardWidth())
+                {
+                    revealEmptyFields(i, j); // recursively reveal a cluster of empty fields around
+                }
+            }
         }
     }
 }

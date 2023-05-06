@@ -46,6 +46,8 @@ private:
     bool hasFlag(int row, int col) const;
     bool isRevealed(int row, int col) const;
     bool isBoardFresh() const;
+    bool isNotAdjacent(int row, int col, int newRow, int newCol);
+    void revealEmptyFields(int row, int col); // helper function, reveal function was to long for good readability
     int width_, height_;
     GameMode mode_;
     GameState state_{GameState::RUNNING};

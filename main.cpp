@@ -7,9 +7,10 @@ int main(int argc, char *argv[])
     // sf::RenderWindow window(sf::VideoMode(800, 600), "Grafika w C++/SFML");
     // window.setVerticalSyncEnabled(false);
     // window.setFramerateLimit(30);
-    if (argc != 4)
+    if (argc != 4 || std::stoi(argv[1]) < 4 || std::stoi(argv[2]) < 4)
     {
-        std::cerr << "Usage: " << argv[0] << " <height> <width> <GameMode>\n";
+        std::cerr << "Usage: " << argv[0] << " <height> <width> <GameMode>\n"
+                  << "The minimal board size is 4x4\n";
         return 1;
     }
     srand(time(0));
