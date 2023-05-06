@@ -39,7 +39,8 @@ void MSTextController::play() const
         }
         else
         {
-            std::cout << "Invalid coordinates" << std::endl;
+            system("clear");
+            std::cout << "Invalid coordinates or option" << std::endl;
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }

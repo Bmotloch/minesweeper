@@ -239,6 +239,20 @@ void MinesweeperBoard::revealField(int row, int col)
         if (board_[row][col].hasMine == false) // correct deduction
         {
             board_[row][col].isRevealed = true;
+            for (int i = row - 1; i <= row + 1; i++)
+            {
+                for (int j = col - 1; j <= col + 1; j++)
+                {
+                    if (i >= 0 && i < getBoardHeight() && j >= 0 && j < getBoardWidth() && !board_[i][j].hasMine)
+                    {
+                        if (countMines(i, j) == 0)
+                        {
+                            revealField(i, j); // recursively reveal a cluster of empty fields around
+                        }
+                    }
+                }
+            }
+
             if (checkWin())
             { // check if already won;
                 setGameState(GameState::FINISHED_WIN);
@@ -250,6 +264,19 @@ void MinesweeperBoard::revealField(int row, int col)
             {
                 relocateMine(row, col); // move the mine
                 board_[row][col].isRevealed = true;
+                for (int i = row - 1; i <= row + 1; i++)
+                {
+                    for (int j = col - 1; j <= col + 1; j++)
+                    {
+                        if (i >= 0 && i < getBoardHeight() && j >= 0 && j < getBoardWidth() && !board_[i][j].hasMine)
+                        {
+                            if (countMines(i, j) == 0)
+                            {
+                                board_[i][j].isRevealed = true; // recursively reveal a cluster of empty fields around
+                            }
+                        }
+                    }
+                }
             }
             else // bad luck
             {
@@ -307,7 +334,7 @@ bool MinesweeperBoard::checkWin() const // if the player won the game (all unrev
 
 int MinesweeperBoard::countMines(int row, int col) const
 {
-    if (checkInputRange(row, col) && isRevealed(row, col))
+    if (checkInputRange(row, col)) // only one condition needed, makes minesweeper easier by revealing max 9 empty tiles at once
     {
         int count{0};
         for (int i = row - 1; i <= row + 1; i++)

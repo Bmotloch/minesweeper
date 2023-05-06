@@ -1,10 +1,12 @@
 #include "MinesweeperBoard.hpp"
 #include "MSBoardTextView.hpp"
 #include "MSTextController.hpp"
-
-// to compile: g++ main.cpp MinesweeperBoard.cpp MSBoardTextView.cpp MSTextController.cpp -o main
+// to compile textbased: g++ main.cpp MinesweeperBoard.cpp MSBoardTextView.cpp MSTextController.cpp -o main
 int main(int argc, char *argv[])
 {
+    // sf::RenderWindow window(sf::VideoMode(800, 600), "Grafika w C++/SFML");
+    // window.setVerticalSyncEnabled(false);
+    // window.setFramerateLimit(30);
     if (argc != 4)
     {
         std::cerr << "Usage: " << argv[0] << " <height> <width> <GameMode>\n";
@@ -17,7 +19,7 @@ int main(int argc, char *argv[])
     MinesweeperBoard board(height, width, mode);
     MSBoardTextView view(board);
     MSTextController ctrl(board, view);
-
     ctrl.play();
+
     return 0;
 }
